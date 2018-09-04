@@ -35,16 +35,22 @@ void adc_init(void) {
  * Called periodically, when the button is pressed.
  */
 void heatLoop() {
+	led = !led;
+	
 	if (button.read()) {
 		loopTicker.detach();
 		serial.printf("Button released\n");
 		button.fall(&onButtonPress);
+		heat.stopHeat();
 		return;
 	}
+	float currentTemp = tempSensor.getTemp();
+    controller.setProcessValue(currentTemp);
 
-    controller.setProcessValue(temp.getTemp());
+	float output = controller.compute();
+	heat.setHeat(output);
 
-	serial.printf("%d\n", (int) (controller.compute() * 255.0f));
+	serial.printf("%3d%% %d\n", (int) (output * 100.0f), (int) currentTemp);
 }
 
 /**
@@ -55,7 +61,7 @@ void onButtonPress() {
 	serial.printf("Button pressed\n");
 
 	// TODO: Setup, preheat
-	controller.setSetPoint(38.0f); // TODO read desired temperature from settings
+	controller.setSetPoint(desiredTemperature);
 
 	loopTicker.attach(&heatLoop, CICLE_TIME);
 }
@@ -71,7 +77,5 @@ int main() {
 	button.fall(&onButtonPress);
 
 	while (1) {
-		led = !led;
-		wait_ms(100);
 	}
 }

@@ -15,34 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef HEAT_CONTROLLER_H
+#define HEAT_CONTROLLER_H
 
 #include "mbed.h"
-#include "PID.h"
+#include "PinNames.h"
 
-#include "TemperatureSensor.h"
-#include "HeatController.h"
+#define PERIOD_TIME 10 // in ms
 
-#define CICLE_TIME 0.05f // in seconds
-#define PID_P 3.0f
-#define PID_I 0.0f
-#define PID_D 0.0f
-
-DigitalOut led(P0_1);
-AnalogIn tempInput(A1);
-InterruptIn button(P0_10, PullUp);
-PID controller(PID_P, PID_I, PID_D, CICLE_TIME);
-Ticker loopTicker;
-float desiredTemperature = 40.0f;  // TODO read desired temperature from settings
-
-Serial serial(P0_13, P0_14);
-TemperatureSensor tempSensor(&tempInput, P0_3);
-HeatController heat(P0_4);
-
-void heatLoop();
-void onButtonPress();
-
-int main();
+class HeatController {
+public:
+    HeatController(PinName outputPin);
+    /** Sets the heat. 0.0 means off, 1.0 is full on. */
+    void setHeat(float value);
+    void stopHeat();
+private:
+    PwmOut *_gatePin;
+};
 
 #endif

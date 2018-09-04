@@ -1,6 +1,4 @@
 /*
- * Created 03. Dec 2017 - TemperatureSensor.h
- * 
  * This file is part of the vape_mbed distribution (https://github.com/acidg/vape_mbed)
  * Copyright (C) 2018 acidg
  *
@@ -17,35 +15,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#ifndef TEMPERATURESENSOR_H
-#define TEMPERATURESENSOR_H
+#ifndef MAIN_H
+#define MAIN_H
 
 #include "mbed.h"
-#include "PinNames.h"
+#include "PID.h"
 
-#define PT_RESISTANCE 100.0f
-#define SERIES_RECISTANCE 510.0f
-#define SUPPLY_VOLTAGE 3.18f
-#define WIRE_RESISTANCE 1.8f
+#include "TemperatureSensor.h"
 
-#define CONST_A 0.00390830f
-#define CONST_B -0.0000005775f
-#define CONST_C -0.00000000000418301f
+#define CICLE_TIME 0.1f // in seconds
+#define PID_P 1.0f
+#define PID_I 0.0f
+#define PID_D 0.0f
 
-#define AVERAGE_COUNT 10
+DigitalOut led(P0_1);
+AnalogIn tempInput(A1);
+InterruptIn button(P0_10, PullUp);
+PID controller(PID_P, PID_I, PID_D, CICLE_TIME);
+Ticker loopTicker;
 
-class TemperatureSensor {
-public:
-	TemperatureSensor(AnalogIn *analogInput, PinName enablePort);
-	void powerUp(void);
-	void powerDown(void);
-	float getTemp(void);
-private:
-	AnalogIn *_inputPin;
-	DigitalOut *_enablePort;
-    uint16_t *_values;
-    uint16_t _counter;
-};
+Serial serial(P0_13, P0_14);
+TemperatureSensor temp(&tempInput, P0_3);
+
+void heatLoop();
+void onButtonPress();
+
+int main();
 
 #endif

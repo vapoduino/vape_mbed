@@ -1,0 +1,12 @@
+.temp/
+BUILD/
+*.pyc
+.vscode
+.project
+.cproject
+mbed/
+Debug/*
+Release/*
+Develop/*
+GettingStarted.html
+PID/

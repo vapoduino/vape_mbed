@@ -38,6 +38,7 @@
 class TemperatureSensor {
 public:
 	TemperatureSensor(PinName analogInput, PinName enablePort);
+	virtual ~TemperatureSensor();
 	void powerUp(void);
 	void powerDown(void);
 	float getTemp(void);

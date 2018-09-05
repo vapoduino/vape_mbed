@@ -15,28 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #ifndef BLUETOOTH_MANAGER_H
 #define BLUETOOTH_MANAGER_H
 
-#include "mbed.h"
 #include "BLE.h"
 #include "BatteryService.h"
+#include "BatteryManager.h"
 
 static const char DEVICE_NAME[] = "Vape";
-static const uint16_t uuid16_list[] = {GattService::UUID_BATTERY_SERVICE};
-static Serial *_serial;
-static BatteryService *batteryService;
-static uint8_t batteryLevel;
 
 class BluetoothManager {
 public:
-    BluetoothManager(Serial *serial);
+    BluetoothManager();
+    virtual ~BluetoothManager();
     /** 
      * Handles bluetooth events. Should be called in the main loop.
      */
-    void bleLoop();
+    void bleLoop(float temp);
 private:
+    BatteryManager *_batteryManager;
 };
 
 #endif

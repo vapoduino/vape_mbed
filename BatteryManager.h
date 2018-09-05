@@ -15,22 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "HeatController.h"
+#ifndef BATTERY_MANAGER_H
+#define BATTERY_MANAGER_H
 
-HeatController::HeatController(PinName outputPin) {
-    _gatePin = new PwmOut(outputPin);
+#include "mbed.h"
 
-    _gatePin->period_ms(PWM_PERIOD_TIME);
-}
+#define VOLTAGE_FACTOR 0.006358399 // V/bit
+#define BATTERY_FULL_VOLTAGE 4.15
+#define BATTERY_EMPTY_VOLTAGE 3.7
 
-HeatController::~HeatController() {
-    free(_gatePin);
-}
+class BatteryManager {
+public:
+    BatteryManager(PinName batterySensePin);
+    virtual ~BatteryManager();
+    float getVoltage();
+    uint8_t getPercentage();
+private:
+    AnalogIn *_batteryPin;
+};
 
-void HeatController::setHeat(float value) {
-    _gatePin->write(value);
-}
-
-void HeatController::stopHeat() {
-    _gatePin->write(0.0f);
-}
+#endif

@@ -15,22 +15,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "HeatController.h"
+#include "BatteryManager.h"
 
-HeatController::HeatController(PinName outputPin) {
-    _gatePin = new PwmOut(outputPin);
-
-    _gatePin->period_ms(PWM_PERIOD_TIME);
+BatteryManager::BatteryManager(PinName batterySensePin) {
+    _batteryPin = new AnalogIn(batterySensePin);
 }
 
-HeatController::~HeatController() {
-    free(_gatePin);
+BatteryManager::~BatteryManager() {
+    free(_batteryPin);
 }
 
-void HeatController::setHeat(float value) {
-    _gatePin->write(value);
+float BatteryManager::getVoltage() {
+    return _batteryPin->read_u16() * VOLTAGE_FACTOR;
 }
 
-void HeatController::stopHeat() {
-    _gatePin->write(0.0f);
+uint8_t BatteryManager::getPercentage() {
+    float difference = getVoltage() - BATTERY_EMPTY_VOLTAGE;
+
+    if (difference < 0) {
+        return 0;
+    }
+
+    uint8_t percentage = difference / (BATTERY_FULL_VOLTAGE - BATTERY_EMPTY_VOLTAGE) * 100;
+    
+    if (percentage > 100) {
+        return 100;
+    }
+
+    return percentage;
 }

@@ -17,7 +17,9 @@
  */
 #include "BluetoothManager.h"
 
-void disconnectionCallback(const Gap::DisconnectionCallbackParams_t *params) {
+static BatteryService *batteryService = NULL;
+
+static void disconnectionCallback(const Gap::DisconnectionCallbackParams_t *params) {
     BLE::Instance().gap().startAdvertising();
 }
 
@@ -30,13 +32,12 @@ static void bleInitComplete(BLE::InitializationCompleteCallbackContext *params) 
     Gap& gap = ble.gap();
  
     if (error != BLE_ERROR_NONE) {
-        _serial->printf("Error during ble init! Code: %d\n", error);
         return;
     }
  
     gap.onDisconnection(disconnectionCallback);
  
-    batteryService = new BatteryService(ble, batteryLevel);
+    batteryService = new BatteryService(ble, 0);
  
     /* setup advertising */
     gap.accumulateAdvertisingPayload(GapAdvertisingData::BREDR_NOT_SUPPORTED | GapAdvertisingData::LE_GENERAL_DISCOVERABLE);
@@ -46,22 +47,22 @@ static void bleInitComplete(BLE::InitializationCompleteCallbackContext *params) 
     gap.startAdvertising();
 }
 
-BluetoothManager::BluetoothManager(Serial *serialInstance) {
-    _serial = serialInstance;
-    _serial->printf("hi from ble\n");
+BluetoothManager::BluetoothManager() {
+    _batteryManager = new BatteryManager(A3);
     BLE &ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
     ble.init(bleInitComplete);
 }
 
-void BluetoothManager::bleLoop() {
+BluetoothManager::~BluetoothManager() {
+    free(_batteryManager);
+}
+
+void BluetoothManager::bleLoop(float temp) {
     BLE &ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
     ble.waitForEvent(); // this will return upon any system event (such as an interrupt or a ticker wakeup)
  
-    // the magic battery processing
-    batteryLevel++;
-    if (batteryLevel > 100) {
-        batteryLevel = 20;
-    }
-
-    batteryService->updateBatteryLevel(batteryLevel);
+    batteryService->updateBatteryLevel(_batteryManager->getPercentage());
+    Serial serial(P0_13, P0_14);
+	serial.baud(115200);
+    serial.printf("%dmV, %d%%, %d°C\n", (int) (_batteryManager->getVoltage() * 1000), _batteryManager->getPercentage(), (int) temp);
 }

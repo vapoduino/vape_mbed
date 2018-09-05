@@ -39,7 +39,7 @@ float desiredTemperature = 40.0f;  // TODO read desired temperature from setting
 Serial serial(P0_13, P0_14);
 BluetoothManager *bluetoothManager;
 TemperatureSensor tempSensor(A1, P0_3);
-HeatController heat(P0_4);
+HeatController heat(P0_9);
 
 void heatLoop();
 void onButtonPress();

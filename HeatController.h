@@ -19,13 +19,13 @@
 #define HEAT_CONTROLLER_H
 
 #include "mbed.h"
-#include "PinNames.h"
 
 #define PWM_PERIOD_TIME 10 // in ms
 
 class HeatController {
 public:
     HeatController(PinName outputPin);
+    virtual ~HeatController();
     /** Sets the heat. 0.0 means off, 1.0 is full on. */
     void setHeat(float value);
     void stopHeat();

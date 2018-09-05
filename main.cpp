@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #include "main.h"
 
 /**
@@ -71,17 +70,17 @@ void onButtonPress() {
 
 int main() {
 	serial.baud(115200);
-	adc_init();
 	controller.setInputLimits(0.0f, 230.0f);
 	controller.setOutputLimits(0.0, 1.0);
 	controller.setBias(0.0f); // TODO: set correct bias.
 	controller.setMode(AUTO_MODE);
 
+	bluetoothManager = new BluetoothManager();
+	adc_init();
+	
 	button.fall(&onButtonPress);
 
-	bluetoothManager = new BluetoothManager(&serial);
-
 	while (1) {
-		bluetoothManager->bleLoop();
+		bluetoothManager->bleLoop(tempSensor.getTemp());
 	}
 }

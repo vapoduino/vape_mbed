@@ -26,6 +26,12 @@ TemperatureSensor::TemperatureSensor(PinName analogInput, PinName enablePort) {
 	_counter = 0;
 }
 
+TemperatureSensor::~TemperatureSensor() {
+	free(_inputPin);
+	free(_enablePort);
+	free(_values);
+}
+
 void TemperatureSensor::powerUp(void) {
 	_enablePort->write(1);
 }

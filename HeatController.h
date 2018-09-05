@@ -21,7 +21,7 @@
 #include "mbed.h"
 #include "PinNames.h"
 
-#define PERIOD_TIME 10 // in ms
+#define PWM_PERIOD_TIME 10 // in ms
 
 class HeatController {
 public:

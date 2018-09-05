@@ -18,8 +18,8 @@
 
 #include "TemperatureSensor.h"
 
-TemperatureSensor::TemperatureSensor(AnalogIn *analogInput, PinName enablePort) {
-	_inputPin = analogInput;
+TemperatureSensor::TemperatureSensor(PinName analogInput, PinName enablePort) {
+	_inputPin = new AnalogIn(analogInput);
 	_enablePort = new DigitalOut(enablePort, 0);
 
 	_values = (uint16_t*) malloc(AVERAGE_COUNT * sizeof(typeof(uint16_t)));

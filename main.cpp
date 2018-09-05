@@ -35,15 +35,16 @@ void adc_init(void) {
  * Called periodically, when the button is pressed.
  */
 void heatLoop() {
-	led = !led;
-	
 	if (button.read()) {
-		loopTicker.detach();
-		serial.printf("Button released\n");
-		button.fall(&onButtonPress);
 		heat.stopHeat();
+		loopTicker.detach();
+		button.fall(&onButtonPress);
+		tempSensor.powerUp();
+		serial.printf("Button released\n");
+		led = 0;
 		return;
 	}
+
 	float currentTemp = tempSensor.getTemp();
     controller.setProcessValue(currentTemp);
 
@@ -57,10 +58,12 @@ void heatLoop() {
  * Called, when the button is pressed. TODO: do not call, when the loopTicker is running.
  */
 void onButtonPress() {
-	button.fall(0);
+	button.fall(0); // Disable interrupt
 	serial.printf("Button pressed\n");
+	led = 1;
 
 	// TODO: Setup, preheat
+	tempSensor.powerUp();
 	controller.setSetPoint(desiredTemperature);
 
 	loopTicker.attach(&heatLoop, CICLE_TIME);

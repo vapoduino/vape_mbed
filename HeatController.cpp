@@ -20,7 +20,7 @@
 HeatController::HeatController(PinName outputPin) {
     _gatePin = new PwmOut(outputPin);
 
-    _gatePin->period_ms(PERIOD_TIME);
+    _gatePin->period_ms(PWM_PERIOD_TIME);
 }
 
 void HeatController::setHeat(float value) {

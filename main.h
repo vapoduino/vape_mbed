@@ -30,18 +30,18 @@
 #define PID_D 0.0f
 
 DigitalOut led(P0_1);
-AnalogIn tempInput(A1);
 InterruptIn button(P0_10, PullUp);
 PID controller(PID_P, PID_I, PID_D, CICLE_TIME);
 Ticker loopTicker;
 float desiredTemperature = 40.0f;  // TODO read desired temperature from settings
 
 Serial serial(P0_13, P0_14);
-TemperatureSensor tempSensor(&tempInput, P0_3);
+TemperatureSensor tempSensor(A1, P0_3);
 HeatController heat(P0_4);
 
 void heatLoop();
 void onButtonPress();
+void preHeat();
 
 int main();
 

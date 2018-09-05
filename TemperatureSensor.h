@@ -37,7 +37,7 @@
 
 class TemperatureSensor {
 public:
-	TemperatureSensor(AnalogIn *analogInput, PinName enablePort);
+	TemperatureSensor(PinName analogInput, PinName enablePort);
 	void powerUp(void);
 	void powerDown(void);
 	float getTemp(void);

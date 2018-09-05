@@ -79,6 +79,9 @@ int main() {
 
 	button.fall(&onButtonPress);
 
+	bluetoothManager = new BluetoothManager(&serial);
+
 	while (1) {
+		bluetoothManager->bleLoop();
 	}
 }

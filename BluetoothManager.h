@@ -15,36 +15,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef MAIN_H
-#define MAIN_H
+
+#ifndef BLUETOOTH_MANAGER_H
+#define BLUETOOTH_MANAGER_H
 
 #include "mbed.h"
-#include "PID.h"
+#include "BLE.h"
+#include "BatteryService.h"
 
-#include "TemperatureSensor.h"
-#include "HeatController.h"
-#include "BluetoothManager.h"
+static const char DEVICE_NAME[] = "Vape";
+static const uint16_t uuid16_list[] = {GattService::UUID_BATTERY_SERVICE};
+static Serial *_serial;
+static BatteryService *batteryService;
+static uint8_t batteryLevel;
 
-#define CICLE_TIME 0.05f // in seconds
-#define PID_P 3.0f
-#define PID_I 0.0f
-#define PID_D 0.0f
-
-DigitalOut led(P0_1);
-InterruptIn button(P0_10, PullUp);
-PID controller(PID_P, PID_I, PID_D, CICLE_TIME);
-Ticker loopTicker;
-float desiredTemperature = 40.0f;  // TODO read desired temperature from settings
-
-Serial serial(P0_13, P0_14);
-BluetoothManager *bluetoothManager;
-TemperatureSensor tempSensor(A1, P0_3);
-HeatController heat(P0_4);
-
-void heatLoop();
-void onButtonPress();
-void preHeat();
-
-int main();
+class BluetoothManager {
+public:
+    BluetoothManager(Serial *serial);
+    /** 
+     * Handles bluetooth events. Should be called in the main loop.
+     */
+    void bleLoop();
+private:
+};
 
 #endif

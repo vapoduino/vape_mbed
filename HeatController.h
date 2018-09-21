@@ -20,7 +20,7 @@
 
 #include "mbed.h"
 
-#define PWM_PERIOD_TIME 10 // in ms
+#define PWM_PERIOD_TIME 20 // in ms
 
 class HeatController {
 public:

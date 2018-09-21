@@ -25,16 +25,16 @@
 #include "HeatController.h"
 #include "BluetoothManager.h"
 
-#define CICLE_TIME 0.05f // in seconds
-#define PID_P 3.0f
-#define PID_I 0.0f
-#define PID_D 0.0f
+#define CICLE_TIME 0.2f // in seconds
+#define PID_P 5.0f
+#define PID_I 1.0f
+#define PID_D 2.0f
 
 DigitalOut led(P0_1);
 InterruptIn button(P0_10, PullUp);
 PID controller(PID_P, PID_I, PID_D, CICLE_TIME);
 Ticker loopTicker;
-float desiredTemperature = 40.0f;  // TODO read desired temperature from settings
+float desiredTemperature = 180.0f;  // TODO read desired temperature from settings
 
 Serial serial(P0_13, P0_14);
 BluetoothManager *bluetoothManager;

@@ -20,7 +20,7 @@
 
 #include "mbed.h"
 
-#define VOLTAGE_FACTOR 0.006358399 // V/bit
+#define VOLTAGE_FACTOR 0.005207194 // V/bit
 #define BATTERY_FULL_VOLTAGE 4.15
 #define BATTERY_EMPTY_VOLTAGE 3.7
 

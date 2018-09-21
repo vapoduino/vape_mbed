@@ -38,7 +38,6 @@ void heatLoop() {
 		heat.stopHeat();
 		loopTicker.detach();
 		button.fall(&onButtonPress);
-		tempSensor.powerUp();
 		serial.printf("Button released\n");
 		led = 0;
 		return;
@@ -62,7 +61,7 @@ void onButtonPress() {
 	led = 1;
 
 	// TODO: Setup, preheat
-	tempSensor.powerUp();
+	controller.reset();
 	controller.setSetPoint(desiredTemperature);
 
 	loopTicker.attach(&heatLoop, CICLE_TIME);
@@ -82,5 +81,6 @@ int main() {
 
 	while (1) {
 		bluetoothManager->bleLoop(tempSensor.getTemp());
+		wait(0.2);
 	}
 }

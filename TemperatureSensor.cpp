@@ -41,7 +41,9 @@ void TemperatureSensor::powerDown(void) {
 }
 
 float TemperatureSensor::getTemp(void) {
+	powerUp();
 	int value = _inputPin->read_u16();
+	powerDown();
 	// TODO: calculation may be simplified (no SUPPLY_VOLTAGE needed?)
 	float voltage = (value / 1024.0f) * (SUPPLY_VOLTAGE / 3);
 	float resistance = SERIES_RECISTANCE / ((SUPPLY_VOLTAGE / voltage) - 1) - WIRE_RESISTANCE;

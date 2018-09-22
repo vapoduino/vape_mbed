@@ -39,10 +39,10 @@ class TemperatureSensor {
 public:
 	TemperatureSensor(PinName analogInput, PinName enablePort);
 	virtual ~TemperatureSensor();
-	void powerUp(void);
-	void powerDown(void);
 	float getTemp(void);
 private:
+	void powerUp(void);
+	void powerDown(void);
 	AnalogIn *_inputPin;
 	DigitalOut *_enablePort;
     uint16_t *_values;

@@ -17,6 +17,9 @@
  */
 #include "main.h"
 
+float temp = 0;
+float output = 0;
+
 /**
  * Initializes the ADC. Uses one third of the supply voltage as reference and no prescaling for the input.
  */
@@ -36,6 +39,7 @@ void adc_init(void) {
 void heatLoop() {
 	if (button.read()) {
 		heat.stopHeat();
+		output = 0;
 		loopTicker.detach();
 		button.fall(&onButtonPress);
 		serial.printf("Button released\n");
@@ -43,13 +47,13 @@ void heatLoop() {
 		return;
 	}
 
-	float currentTemp = tempSensor.getTemp();
-    controller.setProcessValue(currentTemp);
+	temp = tempSensor.getTemp();
+    controller.setProcessValue(temp);
 
-	float output = controller.compute();
+	output = controller.compute();
 	heat.setHeat(output);
 
-	serial.printf("%3d%% %d\n", (int) (output * 100.0f), (int) currentTemp);
+	serial.printf("%3d%% %d\n", (int) (output * 100.0f), (int) temp);
 }
 
 /**
@@ -80,7 +84,7 @@ int main() {
 	button.fall(&onButtonPress);
 
 	while (1) {
-		bluetoothManager->bleLoop(tempSensor.getTemp());
-		wait(0.2);
+		bluetoothManager->bleLoop(temp, output);
+		wait(1);
 	}
 }

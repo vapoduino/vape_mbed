@@ -69,7 +69,7 @@ BluetoothManager::~BluetoothManager() {
     free(_batteryManager);
 }
 
-void BluetoothManager::bleLoop(float temp) {
+void BluetoothManager::bleLoop(float temp, float output) {
     BLE::Instance(BLE::DEFAULT_INSTANCE).waitForEvent(); // this will return upon any system event (such as an interrupt or a ticker wakeup)
  
     batteryService->updateBatteryLevel(_batteryManager->getPercentage());
@@ -78,7 +78,7 @@ void BluetoothManager::bleLoop(float temp) {
     values[0] = temperature;
     values[1] = temperature >> 8;
 
-    uint8_t power[] = {50};
+    uint8_t power[] = {(uint8_t) (output * 100)};
     BLE::Instance(BLE::DEFAULT_INSTANCE).updateCharacteristicValue(temperatureCharacteristic.getValueHandle(), values, 2);
     BLE::Instance(BLE::DEFAULT_INSTANCE).updateCharacteristicValue(powerCharacteristics.getValueHandle(), power, 1);
 }

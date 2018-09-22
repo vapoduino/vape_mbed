@@ -28,7 +28,7 @@
 #define CICLE_TIME 0.2f // in seconds
 #define PID_P 5.0f
 #define PID_I 1.0f
-#define PID_D 2.0f
+#define PID_D 0.1f
 
 DigitalOut led(P0_1);
 InterruptIn button(P0_10, PullUp);

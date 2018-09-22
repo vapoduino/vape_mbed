@@ -31,7 +31,7 @@ public:
     /** 
      * Handles bluetooth events. Should be called in the main loop.
      */
-    void bleLoop(float temp);
+    void bleLoop(float temp, float output);
 private:
     BatteryManager *_batteryManager;
 };
